@@ -31,3 +31,4 @@ df_combined = pd.concat([df_fake, df_real], keys=['fake', 'real'], ignore_index=
 
 print(df_combined)
 
+
