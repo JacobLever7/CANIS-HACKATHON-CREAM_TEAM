@@ -3,6 +3,7 @@ import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
 import seaborn as sns
+import os
 from sklearn.feature_extraction.text import CountVectorizer, TfidfVectorizer
 from sklearn.linear_model import LogisticRegression
 from sklearn.ensemble import RandomForestClassifier
@@ -14,8 +15,15 @@ from nltk.corpus import stopwords
 nltk.download('stopwords')
 nltk.download('vader_lexicon')
 
+
+
 # Load the dataset
-df = pd.read_csv('./data/archive/DataSet_Misinfo_FAKE.csv')
+path = os.path.realpath(__file__)
+dir = os.path.dirname(path)
+dir = dir.replace('code', 'data')
+os.chdir(dir)
+
+df = pd.read_csv('archive/DataSet_Misinfo_FAKE.csv')
 
 # Data Cleaning
 df.drop_duplicates(inplace=True)
