@@ -4,7 +4,7 @@ import os
 import matplotlib.pyplot as plt
 import string
 import re
-
+from textblob import TextBlob
 
 
 # Load the dataset
@@ -51,6 +51,8 @@ df_real['text'] = df_real['text'].apply(lambda x: re.sub(r'<.*?>', '', x))
 # Combine the dataframes
 df_combined = pd.concat([df_fake, df_real], ignore_index=True)
 
+print(df_combined.columns)
+
 # Calculate summary statistics
 num_fake_articles = len(df_fake)
 num_real_articles = len(df_real)
@@ -93,4 +95,46 @@ plt.xlabel('Text Length')
 plt.ylabel('Frequency')
 # Remove far-right outliers
 plt.xlim(left=-2500, right=20000)
+#plt.show()
+
+# define a function to detect emotional language
+import pandas as pd
+import matplotlib.pyplot as plt
+from textblob import TextBlob
+
+# define a function to detect emotional language
+def detect_emotion(text):
+    blob = TextBlob(text)
+    sentiment = blob.sentiment.polarity
+    if sentiment > 0:
+        return 'positive'
+    elif sentiment < 0:
+        return 'negative'
+    else:
+        return 'neutral'
+
+# apply the detect_emotion function to the 'text' column of each dataframe
+df_fake['emotion'] = df_fake['text'].apply(detect_emotion)
+df_real['emotion'] = df_real['text'].apply(detect_emotion)
+
+# create a list of emotional categories
+emotions = ['positive', 'neutral', 'negative']
+
+# create a dictionary to hold the frequency of each emotional category for each dataframe
+freq_dict = {'Fake': [], 'Real': []}
+for emo in emotions:
+    freq_dict['Fake'].append(df_fake['emotion'].value_counts()[emo])
+    freq_dict['Real'].append(df_real['emotion'].value_counts()[emo])
+
+# create a bar chart of the emotional frequency for each dataframe
+bar_width = 0.35
+r1 = range(len(emotions))
+r2 = [x + bar_width for x in r1]
+plt.bar(r1, freq_dict['Fake'], color='red', width=bar_width, label='Fake')
+plt.bar(r2, freq_dict['Real'], color='green', width=bar_width, label='Real')
+plt.xticks([r + bar_width/2 for r in r1], emotions)
+plt.xlabel('Emotion')
+plt.ylabel('Frequency')
+plt.title('Emotional Frequency in Fake and Real News')
+plt.legend()
 plt.show()
