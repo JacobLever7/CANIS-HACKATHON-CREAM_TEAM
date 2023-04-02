@@ -51,17 +51,17 @@ data['text'] = preprocessed_review
 # plt.axis('off')
 
 
-common_words = get_top_n_words(data['text'], 20)
-df1 = pd.DataFrame(common_words, columns=['Review', 'count'])
+# common_words = get_top_n_words(data['text'], 20)
+# df1 = pd.DataFrame(common_words, columns=['Review', 'count'])
   
-df1.groupby('Review').sum()['count'].sort_values(ascending=False).plot(
-    kind='bar',
-    figsize=(10, 6),
-    xlabel="Top Words",
-    ylabel="Count",
-    title="Bar Chart of Top Words Frequency"
-)
-plt.show()
+# df1.groupby('Review').sum()['count'].sort_values(ascending=False).plot(
+#     kind='bar',
+#     figsize=(10, 6),
+#     xlabel="Top Words",
+#     ylabel="Count",
+#     title="Bar Chart of Top Words Frequency"
+# )
+# plt.show()
 
 
 # Split into train and test
