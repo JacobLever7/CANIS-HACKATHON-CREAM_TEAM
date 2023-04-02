@@ -1,6 +1,8 @@
 
 import pandas as pd
 import os
+import matplotlib.pyplot as plt
+
 
 
 # Load the dataset
@@ -12,23 +14,28 @@ os.chdir(dir)
 df_fake = pd.read_csv('archive/DataSet_Misinfo_FAKE.csv')
 df_real = pd.read_csv('archive/DataSet_Misinfo_TRUE.csv')
 
+# Add label column to each dataframe
+df_fake['label'] = 0
+df_real['label'] = 1
 
 #fix weird column name: 'Unnamed: 0'
 df_fake.rename(columns= {'Unnamed: 0' : 'title'}, inplace=True)
 df_real.rename(columns= {'Unnamed: 0' : 'title'}, inplace=True)
 
-# Add label column to each dataframe
-label_dict = {'df_fake': 0, 'df_real': 1}
-df_fake['label'] = df_fake['title'].map(lambda x: label_dict['df_fake'])
-df_real['label'] = df_real['title'].map(lambda x: label_dict['df_real'])
-
 # Drop the title column
 df_fake.drop(columns=["title"], inplace=True)
 df_real.drop(columns=["title"], inplace=True)
 
-# Combine the dataframes and create multi-index dataframe
-df_combined = pd.concat([df_fake, df_real], keys=['fake', 'real'], ignore_index=True)
+# Combine the dataframes
+df_combined = pd.concat([df_fake, df_real], ignore_index=True)
 
-print(df_combined)
+# Calculate summary statistics
+num_fake_articles = len(df_fake)
+num_real_articles = len(df_real)
 
-
+# Create the bar chart
+plt.bar(['Fake', 'Real'], [num_fake_articles, num_real_articles])
+plt.title('Number of articles in each category')
+plt.xlabel('Category')
+plt.ylabel('Number of articles')
+plt.show()
