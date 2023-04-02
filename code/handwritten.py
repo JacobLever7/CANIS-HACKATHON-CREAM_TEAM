@@ -26,6 +26,11 @@ df_real.rename(columns= {'Unnamed: 0' : 'title'}, inplace=True)
 df_fake.drop(columns=["title"], inplace=True)
 df_real.drop(columns=["title"], inplace=True)
 
+# make text all strings
+df_fake['text'] = df_fake['text'].astype(str)
+df_real['text'] = df_real['text'].astype(str)
+
+
 # Combine the dataframes
 df_combined = pd.concat([df_fake, df_real], ignore_index=True)
 
@@ -33,9 +38,42 @@ df_combined = pd.concat([df_fake, df_real], ignore_index=True)
 num_fake_articles = len(df_fake)
 num_real_articles = len(df_real)
 
-# Create the bar chart
-plt.bar(['Fake', 'Real'], [num_fake_articles, num_real_articles])
-plt.title('Number of articles in each category')
-plt.xlabel('Category')
-plt.ylabel('Number of articles')
+# # Set the colors for the bars
+# colors = ['red', 'green']
+
+# # Create the bar chart
+# plt.bar(['Fake', 'Real'], [num_fake_articles, num_real_articles], color=colors)
+
+# # Add text above each bar to show the exact number of articles
+# plt.text(0, num_fake_articles + 1000, num_fake_articles, ha='center')
+# plt.text(1, num_real_articles + 1000, num_real_articles, ha='center')
+
+# # Create the bar chart
+# plt.title('Number of articles in each category')
+# plt.xlabel('Category')
+# plt.ylabel('Number of articles')
+# plt.ylim(0, max(num_fake_articles, num_real_articles) * 1.2)
+# plt.show()
+
+# Character Length of Titles - Min, Mean, Max for df_fake
+print('df_fake')
+print('Mean Length:', df_fake['text'].apply(len).mean())
+print('Min Length:', df_fake['text'].apply(len).min())
+print('Max Length:', df_fake['text'].apply(len).max())
+
+# Character Length of Titles - Min, Mean, Max for df_real
+print('\ndf_real')
+print('Mean Length:', df_real['text'].apply(len).mean())
+print('Min Length:', df_real['text'].apply(len).min())
+print('Max Length:', df_real['text'].apply(len).max())
+
+# Plot histograms for both df_fake and df_real
+plt.hist(df_fake['text'].apply(len), bins=335, alpha=0.5, color='red', label='df_fake')
+plt.hist(df_real['text'].apply(len), bins=200, alpha=0.5, color='blue', label='df_real')
+plt.legend(loc='upper right')
+plt.title('Distribution of Text Length')
+plt.xlabel('Text Length')
+plt.ylabel('Frequency')
+# Remove far-right outliers
+plt.xlim(left=-2500, right=20000)
 plt.show()
