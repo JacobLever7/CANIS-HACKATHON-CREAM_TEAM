@@ -2,6 +2,8 @@
 import pandas as pd
 import os
 import matplotlib.pyplot as plt
+import string
+import re
 
 
 
@@ -26,9 +28,24 @@ df_real.rename(columns= {'Unnamed: 0' : 'title'}, inplace=True)
 df_fake.drop(columns=["title"], inplace=True)
 df_real.drop(columns=["title"], inplace=True)
 
-# make text all strings
+# clean up data
 df_fake['text'] = df_fake['text'].astype(str)
 df_real['text'] = df_real['text'].astype(str)
+
+# lowercase
+df_fake['text'] = df_fake['text'].str.lower()
+df_real['text'] = df_real['text'].str.lower()
+
+# remove punctuation
+df_fake['text'] = df_fake['text'].apply(lambda x: x.translate(str.maketrans('', '', string.punctuation)))
+df_real['text'] = df_real['text'].apply(lambda x: x.translate(str.maketrans('', '', string.punctuation)))
+
+# Remove URLs and HTML tags
+df_fake['text'] = df_fake['text'].apply(lambda x: re.sub(r'http\S+', '', x))
+df_fake['text'] = df_fake['text'].apply(lambda x: re.sub(r'<.*?>', '', x))
+
+df_real['text'] = df_real['text'].apply(lambda x: re.sub(r'http\S+', '', x))
+df_real['text'] = df_real['text'].apply(lambda x: re.sub(r'<.*?>', '', x))
 
 
 # Combine the dataframes
