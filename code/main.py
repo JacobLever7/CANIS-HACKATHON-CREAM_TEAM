@@ -7,15 +7,16 @@ import pandas as pd
 import os
 import matplotlib.pyplot as plt
 from textblob import TextBlob
+from functions import *
 
-# Load the dataset
-path = os.path.realpath(__file__)
-dir = os.path.dirname(path)
-dir = dir.replace('code', 'data')
-os.chdir(dir)
 
-df_fake = pd.read_csv('archive/DataSet_Misinfo_FAKE.csv')
-df_real = pd.read_csv('archive/DataSet_Misinfo_TRUE.csv')
+df_fake, df_real = load_datasets()
+
+#df_fake, df_real = cleanup_datasets(df_fake_raw, df_real_raw)
+
+# Convert text to type str
+df_real['text'] = df_real['text'].astype(str)
+df_fake['text'] = df_fake['text'].astype(str)
 
 def detect_sentiment(text):
     blob = TextBlob(text)
