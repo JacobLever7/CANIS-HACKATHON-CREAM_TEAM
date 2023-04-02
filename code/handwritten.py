@@ -33,9 +33,19 @@ df_combined = pd.concat([df_fake, df_real], ignore_index=True)
 num_fake_articles = len(df_fake)
 num_real_articles = len(df_real)
 
+# Set the colors for the bars
+colors = ['red', 'green']
+
 # Create the bar chart
-plt.bar(['Fake', 'Real'], [num_fake_articles, num_real_articles])
+plt.bar(['Fake', 'Real'], [num_fake_articles, num_real_articles], color=colors)
+
+# Add text above each bar to show the exact number of articles
+plt.text(0, num_fake_articles + 1000, num_fake_articles, ha='center')
+plt.text(1, num_real_articles + 1000, num_real_articles, ha='center')
+
+# Create the bar chart
 plt.title('Number of articles in each category')
 plt.xlabel('Category')
 plt.ylabel('Number of articles')
+plt.ylim(0, max(num_fake_articles, num_real_articles) * 1.2)
 plt.show()
