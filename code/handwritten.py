@@ -2,6 +2,8 @@
 import pandas as pd
 import os
 import matplotlib.pyplot as plt
+import string
+import re
 from textblob import TextBlob
 
 
@@ -26,9 +28,24 @@ df_real.rename(columns= {'Unnamed: 0' : 'title'}, inplace=True)
 df_fake.drop(columns=["title"], inplace=True)
 df_real.drop(columns=["title"], inplace=True)
 
-# make text all strings
+# clean up data
 df_fake['text'] = df_fake['text'].astype(str)
 df_real['text'] = df_real['text'].astype(str)
+
+# lowercase
+df_fake['text'] = df_fake['text'].str.lower()
+df_real['text'] = df_real['text'].str.lower()
+
+# remove punctuation
+df_fake['text'] = df_fake['text'].apply(lambda x: x.translate(str.maketrans('', '', string.punctuation)))
+df_real['text'] = df_real['text'].apply(lambda x: x.translate(str.maketrans('', '', string.punctuation)))
+
+# Remove URLs and HTML tags
+df_fake['text'] = df_fake['text'].apply(lambda x: re.sub(r'http\S+', '', x))
+df_fake['text'] = df_fake['text'].apply(lambda x: re.sub(r'<.*?>', '', x))
+
+df_real['text'] = df_real['text'].apply(lambda x: re.sub(r'http\S+', '', x))
+df_real['text'] = df_real['text'].apply(lambda x: re.sub(r'<.*?>', '', x))
 
 
 # Combine the dataframes
@@ -57,33 +74,30 @@ num_real_articles = len(df_real)
 # plt.ylim(0, max(num_fake_articles, num_real_articles) * 1.2)
 # plt.show()
 
-# Character Length of Titles - Min, Mean, Max for df_fake
-print('df_fake')
-print('Mean Length:', df_fake['text'].apply(len).mean())
-print('Min Length:', df_fake['text'].apply(len).min())
-print('Max Length:', df_fake['text'].apply(len).max())
+# # Character Length of Titles - Min, Mean, Max for df_fake
+# print('df_fake')
+# print('Mean Length:', df_fake['text'].apply(len).mean())
+# print('Min Length:', df_fake['text'].apply(len).min())
+# print('Max Length:', df_fake['text'].apply(len).max())
 
-# Character Length of Titles - Min, Mean, Max for df_real
-print('\ndf_real')
-print('Mean Length:', df_real['text'].apply(len).mean())
-print('Min Length:', df_real['text'].apply(len).min())
-print('Max Length:', df_real['text'].apply(len).max())
+# # Character Length of Titles - Min, Mean, Max for df_real
+# print('\ndf_real')
+# print('Mean Length:', df_real['text'].apply(len).mean())
+# print('Min Length:', df_real['text'].apply(len).min())
+# print('Max Length:', df_real['text'].apply(len).max())
 
-# Plot histograms for both df_fake and df_real
-plt.hist(df_fake['text'].apply(len), bins=335, alpha=0.5, color='red', label='df_fake')
-plt.hist(df_real['text'].apply(len), bins=200, alpha=0.5, color='blue', label='df_real')
-plt.legend(loc='upper right')
-plt.title('Distribution of Text Length')
-plt.xlabel('Text Length')
-plt.ylabel('Frequency')
-# Remove far-right outliers
-plt.xlim(left=-2500, right=20000)
-#plt.show()
+# # Plot histograms for both df_fake and df_real
+# plt.hist(df_fake['text'].apply(len), bins=335, alpha=0.5, color='red', label='df_fake')
+# plt.hist(df_real['text'].apply(len), bins=200, alpha=0.5, color='blue', label='df_real')
+# plt.legend(loc='upper right')
+# plt.title('Distribution of Text Length')
+# plt.xlabel('Text Length')
+# plt.ylabel('Frequency')
+# # Remove far-right outliers
+# plt.xlim(left=-2500, right=20000)
+# plt.show()
 
-# define a function to detect emotional language
-import pandas as pd
-import matplotlib.pyplot as plt
-from textblob import TextBlob
+
 
 # define a function to detect emotional language
 def detect_emotion(text):
