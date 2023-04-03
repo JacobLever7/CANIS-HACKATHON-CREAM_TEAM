@@ -19,3 +19,7 @@ By understanding the traits of fake content, it may be able to help people stay 
 
 Part 2. Machine Learning model to predict misinformation: we developed a machine learning model to train AI to detect false information, based of the data given in the offical Hackathon guidelines.
 - Includes confusion matrix to test accuracy of the model.
+
+Note to the judge:
+- to run the programs, make sure all libraries and imports are satisfied.
+- load time may vary due to vast size of database. Be patient, especially for the detection-model.py.
